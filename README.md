@@ -7,7 +7,7 @@ This work examines brain state dynamics while watching a movie. This movie can b
 Functional imaging was performed with a 3 Tesla Siemens scanner to obtain one whole-brain BOLD-weighted image every 0.82 seconds, for a total of 535 functional images (~20 min) throughout the entire movie. Prior to the movie a resting-state scan of 225 functional images (~8 min) was performed. This repository provides extracted timeseries data and matlab scripts to re-run the analysis to reproduce Figure 1 (Brain States) and Figure 2 (Brain State Dynamics).
 
 This repository consist of:
- - data folder containing movie annotations and 2 zip files. One zip file contains the extracted timeseries. These series have names formatted as: "aroma-ts-<COND>-s<PP>-r<ROI>.txt", where COND is resta, restb, mov1a, mob1b; PP is participant number (1-20); ROI is the network. The other zip file contains the ROI network masks.
+ - data folder containing movie annotations and 2 zip files. One zip file contains the extracted timeseries. These series have names formatted as: "aroma-ts-COND-sPP-rROI.txt", where COND is resta, restb, mov1a, mob1b; PP is participant number (1-20); ROI is the network. The other zip file contains the ROI network masks.
  - Matlab scripts for preprocessing. The three main scripts are: 
    - Step1_create_dirs_and_run_hmm.m
    - Step2_create_brain_state_figure.m
