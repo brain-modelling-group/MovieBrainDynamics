@@ -1,0 +1,25 @@
+# Ignore everything
+*
+
+# Except .gitignore
+!.gitignore
+
+# README.md
+!README.md
+
+# and .m files and .zip even in subdirectories
+!*.m
+!extracted_timeseries.zip
+!rois.zip
+
+# all files with annotations
+!annotation*
+
+# also not the bw.mat colormap file
+!bw.mat
+
+# and HMM-MAR's LICENSE file
+!LICENSE
+
+# even when they're in a sub-dir
+!*/
