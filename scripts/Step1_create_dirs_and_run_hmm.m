@@ -48,6 +48,8 @@
 %             'GlobalSignal' regressor is included from the fMRIPREP's .csv
 %             output.
 %
+% [normal and aroma-hsr are available upon request]
+%
 % in all cases, covariate regression was performed with the 'clean_img'
 % function of the image module within the python nilearn package
 % (https://nilearn.github.io/modules/generated/nilearn.image.clean_img.html)
@@ -74,22 +76,49 @@
 % - Number of brain states (8, 10, 12, 24)
 % - For each brain state, 15 iterations are run
 % - This is repeated for different conditions
+%
 
+
+% matlab might complain about pca; since matlab does not have any modules
+% structure, everything is in the same path.
+% rmpath(fileparts(which('pca')))
 
 %
 %
 % this is for looping over total amount of brain nstates
 %
 %
-NSTATES=[8 10 12 24];
 NSTATES=[10]; % we run only 10 states...
+HMMREPS = 15; % re-run the HMM analysis 15 times.
+
+
+
+% run the hmm.
+addpath(genpath('hmm_new')) % load in the hmm toolbox + additional functions
+
+
+
+
+analyses = {...
+    {'mov1a'},'mov1a'; ... % only day 1 movie
+    {'mov1b'},'mov1b'; ... % only day 2 movie
+    {'mov1a','mov1b'},'mov1a-1b'; ... 
+    {'resta'},'resta'; ...  % only dat 1 rest
+    {'restb'},'restb'; ...  % only day 2 rest
+    {'resta','restb'},'resta-b'; ...  
+    {'mov1a','mov1b','resta','restb'},'all'; ...  % all
+    };
+
+WHICH_ANALYSES = 7; % 
+
+TRUNCATE_VOLS_TO_220 = 0; % matlab does not have True and False, so 0 and 1 is the way to go.
 
 
 %
 %
 % this keeps score which subject did which scan, and who should be excluded
 % because of unusable data. This is assessed from a visual inspection of
-% the fMRIPREP data.
+% the fMRIPREP data. Excluded subjects are not enumerated in the list.
 %
 %
 
@@ -133,24 +162,6 @@ NULL_FIRST = 5;
 J=14;  % the number of networks!
 
 
-%
-%
-% This controls the type of scans to be put into the HMM. In the paper wer
-% report on 
-%
-%
-
-analyses = {...
-    {'mov1a'},'mov1a'; ... % only day 1 movie
-    {'mov1b'},'mov1b'; ... % only day 2 movie
-    {'mov1a','mov1b'},'mov1a-1b'; ... 
-    {'resta'},'resta'; ...  % only dat 1 rest
-    {'restb'},'restb'; ...  % only day 2 rest
-    {'resta','restb'},'resta-b'; ...  
-    {'mov1a','mov1b','resta','restb'},'all'; ...  % all
-    };
-
-
 
 %
 %
@@ -158,6 +169,7 @@ analyses = {...
 % files, runs the HMM, and saves the results to the .mat file.
 %
 %
+
 
 
 for i_NSTATES=1:numel(NSTATES)
@@ -173,7 +185,7 @@ for i_NSTATES=1:numel(NSTATES)
         covregtype = covregtypes{i_covregtype};
         covregpre  = covregpres{i_covregtype};
         
-        for i_analysis = 7 % optionally run ALL analysis; change to [1:7]
+        for i_analysis = WHICH_ANALYSES % optionally run ALL analysis; change to [1:6]
             
             
             scan_names = analyses{i_analysis, 1};
@@ -212,7 +224,7 @@ for i_NSTATES=1:numel(NSTATES)
             
             for i_scan_name = 1:numel(scan_names)
                 scan = scan_names{i_scan_name};
-                % scan='mov1';
+
                 % d=dir(['extracted_timeseries/*' scan '*r01.txt']);
                 
                 
@@ -225,6 +237,11 @@ for i_NSTATES=1:numel(NSTATES)
                 switch scan
                     case {'mov1a','mov1b'}
                         nscans=535;
+                        
+                        if TRUNCATE_VOLS_TO_220
+                            scans=220;
+                        end
+                        
                     case {'resta','restb'}
                         nscans=220;
                 end
@@ -248,10 +265,23 @@ for i_NSTATES=1:numel(NSTATES)
                         disp(fname)    % double-check what's being loaded
                         v=load(fname); % load the timeseries data
                         
+                        if TRUNCATE_VOLS_TO_220
+                            % truncate vols to these indices (I added 530/2
+                            % but you can leave it out to select a
+                            % different part of the movie
+                            cut_sel_inds = (1:220) + 530/2;
+                            v=v(cut_sel_inds);
+                        end
                         
                         disp(length(v));
                         % discard first 5 volumes (!!!)
+                        
+                        
+                        
+                       
                         v(1:NULL_FIRST) = [];
+                        
+                        
                         
                         
                         dv=detrend(v,'constant'); % remove the mean
@@ -289,16 +319,14 @@ for i_NSTATES=1:numel(NSTATES)
             end
             dat=ndat;
             
-            
-            % run the hmm.
-            addpath(genpath('hmm_new')) % load in the hmm toolbox
+
             
             
             tic;
             
             n_sub = numel(subs_to_use); % no. of subjects(used for concatenation)
             K = this_NSTATES; % no. states
-            reps = 15; % to run it multiple times (saves all the results
+            reps = HMMREPS; % to run it multiple times (saves all the results
             % as a seperate mat file)
             
             TR = 2.20;  % TR of timeseries
@@ -326,6 +354,10 @@ for i_NSTATES=1:numel(NSTATES)
                 [hmm, Gamma, ~, vpath, ~, ~, fe] = hmmmar(dat,T,options);
                 save([save_dir '/HMMrun_rep_' num2str(r) '.mat'],'Gamma','vpath',...
                     'hmm','T','J','K','n_sub','fe');
+                
+                % keyboard;
+                % we also save the data now...
+                save([save_dir '/HMMrun_rep_' num2str(r) '_data.mat'], 'dat');
                 
                 
                 % calculate summary measures for this HMM and save those
