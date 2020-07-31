@@ -60,7 +60,14 @@ preprocessing='aroma';
 analysis = 'all';
 % parts =  {'mov1a','mov1b','resta','restb'};
 parts =  {'mov1a','resta'};
-RUN=10;
+
+
+load valid_inferences_all.mat
+RUN=valid_inferences(1); % you might change this depending on which HMM inference you wish to check out.
+
+
+
+% RUN=10;
 NSTATES=10;
  %ANALYSIS=analysis;
 

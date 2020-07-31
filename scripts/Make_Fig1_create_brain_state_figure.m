@@ -503,7 +503,7 @@ for i_summarymeasures= valid_inferences %% valid_inferences(1:15) % set to [1:15
         output_filename = [scriptpath filesep '..' filesep 'figures' filesep 'Fig1_' preprocessing_dir '-' analysis_dir '-' num2str(SUMMARY_MEASURES_FILE) '.jpg'];
         
         
-        print('-djpeg','-r600', output_filename);
+        print('-djpeg','-r300', output_filename);
         
         if CLOSE_FIGS
             close(fh_overview_states);

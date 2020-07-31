@@ -8,7 +8,12 @@ addpath('NBSdirected');
 
 load('outr.mat');
 ANALYSIS='all';
-RUN=10;
+
+load valid_inferences_all.mat
+RUN=valid_inferences(1); % you might change this depending on which HMM inference you wish to check out.
+
+
+% RUN=10;
 
 COMP_A = 'resta';
 COMP_B = 'mov1a';

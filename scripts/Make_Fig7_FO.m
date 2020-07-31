@@ -18,9 +18,10 @@
 
 % re-run this twice - first WITH - second WITHOUT the 'bad guys'.
 
-NSTATES=[8 10 24];
+NSTATES=[10];
 
-
+load valid_inferences_all.mat
+RUN=valid_inferences(1);
 
 
 
@@ -53,26 +54,19 @@ J=14;  % the number of networks!
 
 
 analyses = {...
-    {'mov1a'},'mov1a---2'; ... % only mov1
-    {'mov2a'},'mov2a---2'; ... % only mov2 (repeat on d1 from 11min onwards)
-    {'mov1b'},'mov1b---2'; ... % only mov2 day2
-    {'mov1a','mov1b'},'mov1a-1b---2'; ... % mov1 day and and day 2
-    {'mov1a','mov2a'},'mov1a-2a---2'; ... % mov1 day1 + repeat on day 1
-    {'resta'},'resta---2'; ...  % only resta
-    {'restb'},'restb---2'; ...  % only rest day 2
-    {'resta','restb'},'resta-b---2'; ...  % rest a and rest day 2
-    {'mov1a','mov1b','resta','restb'},'all---2'; ...  % all movie and rest day 1 aand day 2 but not repeats
-    {'mov1a','mov2a','mov1b','resta','restb'},'allPlus---2'; ...  % ALL functional data.
-    {'mov1a','resta'},'sessiona---2'; ...
+    {'mov1a'},'mov1a'; ... % only mov1
+    {'mov1b'},'mov1b'; ... % only mov2 day2
+    {'mov1a','mov1b'},'mov1a-1b'; ... % mov1 day and and day 2
+    {'resta'},'resta'; ...  % only resta
+    {'restb'},'restb'; ...  % only rest day 2
+    {'resta','restb'},'resta-b'; ...  % rest a and rest day 2
+    {'mov1a','mov1b','resta','restb'},'all'; ...  % all movie and rest day 1 aand day 2 but not repeats
     };
 
 
 
 % run hmm for normal, aroma, and aroma-gsr extracted timeseries.
-
-
-
-for i_NSTATES=2 %1:numel(NSTATES)
+for i_NSTATES=1:numel(NSTATES)
     this_NSTATES=NSTATES(i_NSTATES);
     
     covregtypes={'normal','aroma','aroma-gsr'};
@@ -118,7 +112,7 @@ for i_NSTATES=2 %1:numel(NSTATES)
                 % d=dir(['extracted_timeseries/*' scan '*r01.txt']);
                 d=[];
                 for i=1:nsubs
-                    d = [d dir(['../extracted_timeseries/' covregpre 'ts-' scan '*' sprintf('s%.2d',subs_to_use(i)) '*r01.txt'])];
+                    d = [d dir(['../data/extracted_timeseries/' covregpre 'ts-' scan '*' sprintf('s%.2d',subs_to_use(i)) '*r01.txt'])];
                 end
                 
                 
@@ -145,7 +139,7 @@ for i_NSTATES=2 %1:numel(NSTATES)
                     for j=1:14
                         
                         
-                        fname=regexprep(['../extracted_timeseries/' d(i).name],'r01.txt',sprintf('r%.2d.txt',j));
+                        fname=regexprep(['../data/extracted_timeseries/' d(i).name],'r01.txt',sprintf('r%.2d.txt',j));
                         
                         
                         disp(fname)
@@ -295,10 +289,15 @@ end
 % so that gives us dat -- now load in the hmm from our favorite HMM run:
 % also -- assuming NO bads:, those are: [4 13 15] -- we take care of that in our CCA
 dat=dat;
-vars = load('../results_new2_10/aroma/all---2/HMMrun_rep_13.mat');
+vars = load(sprintf('../results_10/aroma/all/HMMrun_rep_%d.mat',RUN));
 hmm=vars.hmm;
 %%
 
+% use the 'all' HMM decoding decipe to decode the 'mov1a' files (should be
+% 18 subjects)
+% 'all' contains session A and session B - 14 subjects
+% 'mov1a' contains only session A data - 18 subjects (actually more but we
+% remove 3 due to bad/outlier data)
 [Gamma,Xi] = hmmdecode(dat,T,vars.hmm,0);
 [vpath] = hmmdecode(dat,T,vars.hmm,1);
 
@@ -431,7 +430,7 @@ SELSUBS = [1:3 5:12 14 16:21]; % since 4, 13 and 15 are bad... -- this for mov1a
 
 
 % we got the questions...
-m=load('../../questionnaires/m.mat');
+m=load('../data/questionnaires/m.mat');
 m=m.m;
 % m=m(m(:,20)==1,:); -- do NOT select, for now...
 
@@ -649,17 +648,17 @@ if SAVEIT == 1
     
     ftarget_file = 'f8_brainhmmdist_sup7.jpg';
     
-    ftarget1=['/home/johan/mnt/hpcworking/projects/hmm-movie/hmm-mar-matlab/figures_for_manuscript/output/' ftarget_file];
-    ftarget2=['/home/johan/ldrive/Lab_LucaC/10_Johan/1_HMMMovie/' ftarget_file];
+    ftarget1=['../figures/' ftarget_file];
+    
     
     saveas(fh,ftarget1);
-    saveas(fh,ftarget2);
+    
     
     saveas(fh,[ftarget1(1:end-3) 'pdf']);
 
     
     
-    cd /home/johan/mnt/hpcworking/projects/hmm-movie/hmm-mar-matlab/figures_for_manuscript
+    % cd /home/johan/mnt/hpcworking/projects/hmm-movie/hmm-mar-matlab/figures_for_manuscript
 end
 
 

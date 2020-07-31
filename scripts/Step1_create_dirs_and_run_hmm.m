@@ -109,7 +109,7 @@ analyses = {...
     {'mov1a','mov1b','resta','restb'},'all'; ...  % all
     };
 
-WHICH_ANALYSES = 7; % 
+WHICH_ANALYSES = [1 7]; % 
 
 TRUNCATE_VOLS_TO_220 = 0; % matlab does not have True and False, so 0 and 1 is the way to go.
 

@@ -8,7 +8,11 @@ load('outr.mat');
 
 COMP_A = 'mov1a';
 COMP_B = 'resta';
-RUN=10;
+
+load valid_inferences_all.mat
+RUN=valid_inferences(1); % you might change this depending on which HMM inference you wish to check out.
+
+
 ANALYSIS='all';
 
 run=sprintf('run%d',RUN);

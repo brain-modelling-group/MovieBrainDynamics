@@ -7,7 +7,7 @@
 - [Repo Contents](#repo-contents)
 - [System Requirements](#system-requirements)
 - [Installation Guide](#installation-guide)
-- [Demo](#demo)
+- [User Guide](#user-guide)
 - [License](./LICENSE)
 - [Citation](#citation)
 
@@ -79,19 +79,37 @@ The Neurosynth analysis runs as a python jupyter lab notebook. You need to insta
 
 Installation time is mainly determined by copying and unzipping files and downloading the required components; Given the number of steps it should take approximately 2-3 hours.
 
-<a name="demo"></a>
-# Demo
+<a name="user-guide"></a>
+# User Guide
 
 ## Functions
 
-See [all-on-one-script.m]() for the complete analysis that will produce analyze the data and produce the figures.
+1. unzip in the data folder the extracted timeseries
+2. unzip in the data folder the rois
+3. start Matlab
+4. go to the 'scripts' folder
+5. Run in sequence the following scripts:
 
-The main fuctions in the scripts directory are:
-- Step1
-- Step2
-- Step3
-- 
+|Matlab Script|Function|
+|---|---|
+|`Step1_create_dirs_and_run_hmm.m`| Makes all the directories and run the HMM; outputs HMMrun_rep_X and SummaryStatistics_X .mat files in `results_10` folder. The number of inferences is set to 15 repetitions.|
+|`Step1b_Check_for_expressions.m`| Checks for each inference if all the brain states are expressed at least *once* during the entire data|
+|`Make_Fig1_create_brain_state_figure.m`| Makes pictures of how the states are observed - inside the `results_10` folder|
+|`Make_Fig2_state_path_figure.m` | Makes pictures of the viterbi state path for all data, and how these states are similar across subjects|
+|`Step4a_make_subspec_matrices_from_statepath.m` | Pre-analysis for dynamic assessment - makes `outr.mat` file containing intermediate data|
+|`Make_Fig4_OccDwell.m` | Makes Fractional Occupancy and Dwell Time figure|
+|`Step6a_calculate_NBS_mov_rest_sesa.m` | Pre-analysis that runs NBS (Zalesky method) on the state transition matrices - intermediate data are saved in .mat files with the same name as the script - move > rest analysis|
+|`Step6c_calculate_NBS_mov_rest_sesb.m` | Pre-analysis which is the same as before, but for the rest > movie contrast|
+|`Make_Fig5_Dynamics.m` | Makes the state transition/dynamics figure|
+|`Make_Fig7_FO.m` | Runs analysis of IS-RSA comparing dynamics and questionnaire answers - Dynamics are assessed with F0|
+|`Make_Fig7_transitions.m` | Runs analysis of IS-RSA comparing dynamics and questionnaire answers - Dynamics are assessed with State Transition matrices (nonzero elements) |
+|`f11_radio_annots_electrophys_now_the_annots_II.m` | Matches HMM brain state paths to the movie Annotations; both of which are 0-1 vectorized. See Manuscript Figure 8|
+|`f12_new_analysis.m` | Checks if the HR during brain state visit X is higher/lower than the mean HR (across time) for all subjects|
+|`f12_new_analysis_PD.m` | Same script as above, but modified to find if the PD brain state visit X is higher/lower|
+    
+6. For Neurosynth analysis of the brain states - see Neurosynth folder.
 
+*comment: The naming of the scripts and how the functions have been written is rather organic; in future work we would use Python Notebooks to make for cleaner coding practices*
 
 <a href="citation"></a>
 # Citation

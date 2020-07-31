@@ -12,7 +12,11 @@ ORDER_STATES=[1 2 3 4 5 6 7 8 9 10];
 NSTATES=ORDER_STATES;
 
 
-RUN = 10;  % select which run to use
+load valid_inferences_all.mat
+RUN=valid_inferences(1); % you might change this depending on which HMM inference you wish to check out.
+
+
+% RUN = 10;  % select which run to use
 ANALYSIS = 'all'; % which analysis (usually 'all')
 parts =  {'mov1a', 'resta'}; % which part of that analysis - compare mov with rest, session A
 preprocessing='aroma';
