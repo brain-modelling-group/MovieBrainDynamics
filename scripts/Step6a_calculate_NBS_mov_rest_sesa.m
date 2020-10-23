@@ -30,7 +30,7 @@ C=cat(3,mats_a,mats_b);
 nsubs=size(mats_a,3);
 
 % design matrox:
-X=[ones(nsubs,1) zeros(nsubs,1); zeros(nsubs,1) ones(nsubs,1)];
+X=[ones(nsubs,1) zeros(nsubs,1); zeros(nsubs,1) ones(nsubs,1)];  % NOTE: Modeling the subject variance yields similar results; see also Exchange Blocks (below)
 
 
 
