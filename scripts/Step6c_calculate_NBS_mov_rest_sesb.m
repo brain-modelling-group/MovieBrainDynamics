@@ -56,7 +56,7 @@ GLM.X=X;
  GLM.contrast=[1 -1]; 
  %Type of test
  GLM.test='ttest'; % 'ttest' or 'ftest'
- %Exchange block for repeated measures
+ %Exchange block for repeated measures. NOTE: Constraining the variance to within-subject effects produces highly similar results.
  %GLM.exchange=[]; STAT
  STATS.size='Extent'; %'Intensity' or 'Extent'
  %Threshold
