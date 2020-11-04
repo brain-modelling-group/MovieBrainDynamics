@@ -116,5 +116,4 @@ Installation time is mainly determined by copying and unzipping files and downlo
 
 For usage of the scripts and the associated manuscript, please use the following:
 
-Johan N. van der Meer, Michael Breakspear, Luke J. Chang, Luca Cocchi (2020). Movie viewing elicits rich and reliable brain state dynamics. Nature Comms (under review).
-
+Meer, J.N. van der, Breakspear, M., Chang, L.J., Sonkusare, S., Cocchi, L., 2020. Movie viewing elicits rich and reliable brain state dynamics. Nat. Commun. 11, 5004. [https://doi.org/10.1038/s41467-020-18717-w](https://doi.org/10.1038/s41467-020-18717-w)
